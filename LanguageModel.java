@@ -78,11 +78,17 @@ public class LanguageModel {
 
     // Returns a random character from the given probabilities list.
 	public char getRandomChar(List probs) {
+        calculateProbabilities(probs);
 		double random = randomGenerator.nextDouble();
         ListIterator it = probs.listIterator(0);
+        Node first = probs.getFirstNode();
+        if (first.cp.p>random){
+            return first.cp.chr;
+        }
         while (it.hasNext()){
-            if (random<=it.current.cp.cp){
-                return it.current.cp.chr;
+            CharData current = it.next();
+            if (random<=current.cp){
+                return current.chr;
             }
         }
         return ' ';
@@ -99,18 +105,17 @@ public class LanguageModel {
 		if (initialText.length()<windowLength){
             return initialText;
         }
-        int i=0;
-        String window=initialText.substring(i, windowLength);
+        String window=initialText.substring(initialText.length() - windowLength);
         String generated=window;
-        while (window.length()<textLength){
+        while (generated.length()<textLength + windowLength){
             List probs = CharDataMap.get(window);
             if (probs == null){
                return window;
             }
             char c = getRandomChar(probs);
             generated=generated+c;
-            i=i+windowLength;
-            window=initialText.substring(i,i+windowLength);
+            // window=initialText.substring(i,i+windowLength);
+            window = generated.substring(generated.length() - windowLength);
         }
         return generated;
 	}
