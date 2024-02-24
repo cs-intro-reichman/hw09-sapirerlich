@@ -44,16 +44,26 @@ public class List {
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-        if (size == 0) return "()";
-        String str = "(";
+        if (size == 0) {
+            return "()";
+        }
+        StringBuilder str = new StringBuilder("(");
+        // String str = "(";
         Node current = first;
-        while (  (current != null )) {
-            str += current.cp.chr + " ";
+        while (current != null) {
+            // str = str+ current.cp.chr + " ";
+            if (current.next == null)
+            {
+                str.append(current.cp.toString());
+            }
+            else {
+                str.append(current.cp.toString()).append(" ");
+            }
             
             current = current.next;
         }
-        str +=")";
-        return str;
+        str = str.append(")");
+        return str.toString();
     }
 
     /** Returns the index of the first CharData object in this list
